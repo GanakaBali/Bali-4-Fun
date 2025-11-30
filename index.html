@@ -1,0 +1,679 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bali 4 Fun — Your Best Bali Adventure Partner</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================= */
+/*                          STYLES                                */
+/* ============================================================= */
+:root{
+  --orange:#FF6B00;
+  --blue:#0096FF;
+  --white:#ffffff;
+  --bg:#f7f9fc;
+  --card:#ffffff;
+  --muted:#6b7280;
+  --radius:12px;
+  font-family:"Inter",sans-serif;
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#111;line-height:1.45}
+
+/* NAVBAR */
+.navbar{
+  position:sticky;top:0;z-index:40;
+  background:rgba(255,255,255,0.95);
+  backdrop-filter:blur(6px);
+  border-bottom:1px solid rgba(10,10,10,0.05);
+}
+.nav-inner{
+  max-width:1100px;margin:auto;
+  display:flex;align-items:center;
+  justify-content:space-between;
+  padding:12px 20px;
+}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700}
+.logo{
+  width:46px;height:46px;border-radius:10px;
+  background:linear-gradient(135deg,var(--orange),var(--blue));
+  display:grid;place-items:center;color:white;font-weight:800;
+}
+.nav-actions{display:flex;gap:12px}
+.btn{
+  padding:8px 14px;border-radius:10px;border:0;cursor:pointer;
+  font-size:14px;
+}
+.btn-cta{background:var(--orange);color:white}
+.btn-ghost{
+  background:white;border:1px solid rgba(0,0,0,0.06)
+}
+
+/* HERO */
+.hero{padding:36px 20px;max-width:1100px;margin:20px auto}
+.hero-grid{display:grid;grid-template-columns:1fr 380px;gap:28px}
+.hero h1{font-size:clamp(28px,4vw,44px);margin:0}
+.hero p{color:var(--muted);margin:12px 0 20px}
+
+/* Categories */
+.category-row{display:flex;gap:8px;flex-wrap:wrap}
+.cat-btn{
+  background:white;padding:10px 14px;border-radius:999px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.05);cursor:pointer;border:1px solid rgba(0,0,0,0.05)
+}
+
+/* Search Card */
+.hero-card{background:var(--card);border-radius:16px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,0.05)}
+.search{display:flex;gap:8px;width:100%}
+.search input{flex:1;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08);width:100%}
+
+/* Cards */
+.section{max-width:1100px;margin:28px auto;padding:0 20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.card{background:white;border-radius:14px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.06)}
+.card img{width:100%;height:180px;object-fit:cover}
+.card-body{padding:14px}
+.price{font-weight:700;color:var(--orange)}
+.muted{color:var(--muted)}
+
+/* Modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;padding:20px;z-index:900}
+.modal.open{display:flex}
+.modal-card{width:100%;max-width:880px;background:white;border-radius:14px;overflow:auto;max-height:90vh}
+.modal-body{padding:18px}
+.gallery img{width:100%;height:320px;object-fit:cover;border-radius:10px}
+
+/* Booking Popup (selector) */
+#bookPopup{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;padding:20px;z-index:910}
+#bookPopup.open{display:flex}
+.book-box{background:white;border-radius:14px;padding:22px;width:100%;max-width:420px}
+.book-option{padding:12px;border-radius:10px;border:1px solid #ddd;margin-bottom:10px;cursor:pointer;transition:.18s}
+.book-option:hover{border-color:var(--orange);background:#fff2e6}
+
+/* Booking FORM popup */
+#formPopup{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);align-items:center;justify-content:center;z-index:920;padding:20px}
+#formPopup.open{display:flex}
+.form-card{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  width:100%;
+  max-width:520px;
+  box-shadow:0 12px 40px rgba(0,0,0,0.12);
+  max-height: 90vh; 
+  overflow-y: auto; 
+}
+.form-card h3{margin-top:0}
+.form-row{display:flex;gap:10px;align-items:center}
+.form-row .small{flex:0 0 48px}
+
+/* Form controls */
+input[type="text"],input[type="tel"],select,input[type="date"],textarea, input[type="email"]{
+  width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;font-size:14px;
+}
+label{font-size:13px;color:#333;font-weight:600;margin-bottom:6px;display:block}
+.form-group{margin-bottom:12px}
+.add-date-btn{background:var(--blue);color:white;border:none;padding:8px 10px;border-radius:8px;cursor:pointer}
+.remove-date-btn{background:#ff4b4b;color:white;border:none;padding:6px 8px;border-radius:8px;cursor:pointer}
+
+/* form submit */
+.form-actions{display:flex;gap:10px;margin-top:10px}
+.btn-outline{background:white;border:1px solid rgba(0,0,0,0.08);padding:10px;border-radius:8px;cursor:pointer}
+
+/* success / error */
+.form-result{margin-top:10px;font-size:14px}
+
+/* Responsive */
+@media(max-width:860px){.hero-grid{grid-template-columns:1fr}}
+@media(max-width:520px){.nav-actions{display:none}}
+
+/* Styles from form.html */
+.booking-form {  
+  background: #ffffff;
+  width: 100%;  
+  padding: 0; 
+  border-radius: 18px; 
+  box-shadow: none; 
+}  
+.booking-form h2 {  
+  margin: 0 0 15px;  
+  font-size: 26px;  
+  font-weight: 700;  
+  color: #3b2ea8;  
+}  
+
+/* MESSAGE BOX BIGGER */
+.message-box {
+  height: 100px;
+  resize: vertical;
+}
+
+.date-block {  
+  background: #f8f7ff;  
+  border: 1px solid #dedcff;  
+  padding: 15px;  
+  border-radius: 12px;  
+  margin-top: 12px;  
+  margin-bottom: 12px;
+}  
+.date-item {  
+  display: flex;  
+  align-items: center;  
+  gap: 10px;  
+}  
+.activity-item {  
+  margin-top: 12px;  
+}  
+.remove-btn {  
+  background: #ff4b4b;  
+  border: none;  
+  color: white;  
+  font-size: 14px;  
+  border-radius: 8px;  
+  padding: 6px 10px;  
+  cursor: pointer;  
+}  
+.remove-btn:hover {  
+  background: #d93636;  
+}  
+.add-btn {  
+  margin-top: 10px;  
+  background: var(--blue); 
+  color: white;  
+  border: none;  
+  padding: 10px 14px;  
+  border-radius: 10px;  
+  cursor: pointer;  
+  font-weight: 600;  
+}  
+.add-btn:hover {  
+  background: #5848e5;  
+}  
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <div class="brand">
+      <div class="logo">B4</div>
+      <div>
+        <div style="font-weight:700">Bali 4 Fun</div>
+        <div style="font-size:12px;color:var(--muted)">Your Best Bali Adventure Partner</div>
+      </div>
+    </div>
+    <div class="nav-actions">
+      <button class="btn btn-ghost" onclick="scrollToSection('popular')">Popular</button>
+      <button class="btn btn-ghost" onclick="scrollToSection('categories')">Categories</button>
+      <button class="btn btn-cta" onclick="openWhatsApp()">WhatsApp</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-grid">
+    <div>
+      <h1>Bali 4 Fun — Your Best Bali Adventure Partner</h1>
+      <p>Book Nusa Penida, Gili trip, ATV, Rafting and more. Fast WhatsApp support.</p>
+
+      <div class="category-row" id="categoryRow"></div>
+
+      <div class="hero-card" style="margin-top:20px">
+        <div style="font-weight:700;margin-bottom:8px">Search activities</div>
+        <div class="search">
+          <input id="searchInput" placeholder="Search activities or category..." oninput="renderCards()" />
+          <button class="btn btn-cta" onclick="renderCards()">Search</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUICK BOOK -->
+
+<button class="btn btn-cta" 
+        style="font-size:16px;padding:12px 20px;border-radius:12px"
+        onclick="openBookingPopup()">
+  Quick Book
+</button>
+
+
+<!-- POPULAR -->
+<section id="popular" class="section">
+  <h2 style="padding:0 20px">Popular Activities</h2>
+  <div id="cards" class="grid"></div>
+</section>
+
+<!-- CATEGORIES -->
+<section id="categories" class="section">
+  <h2 style="padding:0 20px">Categories</h2>
+  <div id="categoriesList" class="category-row" style="padding:0 20px"></div>
+</section>
+
+<!-- FOOTER -->
+<footer style="padding:30px;text-align:center;color:var(--muted)">
+  © <span id="year"></span> Bali 4 Fun — WhatsApp booking available
+</footer>
+
+<!-- DETAILS MODAL -->
+<div id="modal" class="modal" onclick="if(event.target.id==='modal') closeModal()">
+  <div class="modal-card">
+    <div style="padding:12px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center">
+      <div style="font-weight:700">Activity Details</div>
+      <div>
+        <button class="btn btn-ghost" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- BOOKING POPUP -> selector (WhatsApp or Form) -->
+<div id="bookPopup">
+  <div class="book-box">
+    <div style="font-weight:700;margin-bottom:8px">Choose Booking Method</div>
+    <div class="book-option" onclick="bookViaWhatsApp()">📲 WhatsApp Booking</div>
+    <div class="book-option" onclick="openFormPopup()">📝 Book via Form</div>
+    <button class="btn btn-ghost" style="margin-top:10px;width:100%" onclick="closeBookingPopup()">Cancel</button>
+  </div>
+</div>
+
+<!-- FORM POPUP -> NEW integrated booking form (activity + multiple dates) -->
+<div id="formPopup" aria-hidden="true">
+  <div class="form-card" role="dialog" aria-modal="true" aria-labelledby="formTitle">
+    <div style="display:flex;justify-content:space-between;align-items:center; margin-bottom: 15px;">
+      <h3 id="formTitle">Booking Form</h3>
+      <button class="btn btn-ghost" onclick="closeForm()">Close</button>
+    </div>
+
+    <form class="booking-form" id="bookingForm" action="https://api.web3forms.com/submit" method="POST">
+      <!-- Web3Forms Access Key -->
+      <input type="hidden" name="access_key" value="{YOUR_WEB3FORMS_KEY}">
+
+      <!-- Name -->  
+      <div class="form-group">  
+        <label for="customerName">Your Name</label>  
+        <input type="text" id="customerName" name="name" placeholder="Your full name" required>  
+      </div>  
+
+      <!-- Email -->  
+      <div class="form-group">  
+        <label for="customerEmail">Your Email</label>  
+        <input type="email" id="customerEmail" name="email" placeholder="your@email.com" required>  
+      </div>  
+    
+      <!-- WhatsApp -->  
+      <div class="form-group">  
+        <label for="customerPhone">WhatsApp Number</label>  
+        <input type="tel" id="customerPhone" name="phone" placeholder="e.g. 6281234567890" required>  
+      </div>  
+    
+      <!-- Dynamic Date + Activity Fields -->  
+      <div class="form-group">  
+        <label>Booking Dates & Activities</label>  
+    
+        <div id="dateList">  
+          <div class="date-block">  
+            <div class="date-item">  
+              <input type="date" name="dates[]" required>  
+              <button type="button" class="remove-btn" onclick="removeDate(this)">✕</button>  
+            </div>  
+            <div class="activity-item">  
+              <label>Choose Activity</label>  
+              <select name="activities[]" required>  
+                <option value="">-- Select Activity --</option>  
+                <!-- Options will be populated by JS -->
+              </select>  
+            </div>  
+          </div>  
+        </div>  
+    
+        <button type="button" class="add-btn" onclick="addDate()">+ Add Date</button>  
+      </div>  
+
+      <!-- MESSAGE FIELD -->
+      <div class="form-group">
+        <label for="notes">Message</label>
+        <textarea id="notes" name="message" class="message-box" placeholder="Additional requests or questions..." required></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-cta">Submit Booking</button>  
+        <button type="button" class="btn btn-outline" onclick="submitBookingToWhatsapp()">Send to WhatsApp</button>
+      </div>
+      <div id="formResult" class="form-result muted" role="status" aria-live="polite"></div>
+    </form>  
+  </div>
+</div>
+
+<script>
+/* ===================== DATA ===================== */
+const ADMIN_WHATSAPP = "6281234567890"; // change to your admin WA
+const activities = [
+  {id:1,title:'Nusa Penida Day Trip',category:'Penida',price:450000,img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJ-eZjCH9cNe5z4kjAb5Ay3f2gDE6OCoa6_FvtP5NxR3G5pnH2AWG0D4n-&s=10',desc:'Full day trip.'},
+  {id:2,title:'Nusa Lembongan Tour',category:'Lembongan',price:400000,img:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=60',desc:'Island hopping.'},
+  {id:3,title:'Gili Islands Fastboat',category:'Gili',price:550000,img:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=60',desc:'Fastboat transfer.'},
+  {id:4,title:'ATV Jungle Adventure',category:'ATV',price:300000,img:'https://images.unsplash.com/photo-1549880338-65ddcdfd017b?auto=format&fit=crop&w=1200&q=60',desc:'ATV track jungle.'},
+  {id:5,title:'Ayung River Rafting',category:'Rafting',price:350000,img:'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=1200&q=60',desc:'Rafting adventure.'}
+];
+
+const categories = [...new Set(activities.map(a => a.category)), 'All'];
+
+/* ===================== UI SHORTCUTS ===================== */
+function $(s){return document.querySelector(s)}
+function $all(s){return document.querySelectorAll(s)}
+
+/* show year */
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ===================== INIT ===================== */
+window.addEventListener('DOMContentLoaded', () => {
+  renderCategoryButtons();
+  renderCategoryChips();
+  renderCards();
+});
+
+/* ===================== RENDER HELPERS ===================== */
+function renderCategoryButtons(){
+  const row = $('#categoryRow'); row.innerHTML = '';
+  categories.forEach(cat=>{
+    const b = document.createElement('button');
+    b.className = 'cat-btn';
+    b.textContent = cat;
+    b.onclick = () => { filterByCategory(cat); };
+    row.appendChild(b);
+  });
+}
+
+function renderCategoryChips(){
+  const list = $('#categoriesList'); list.innerHTML = '';
+  categories.forEach(cat=>{
+    const c = document.createElement('button');
+    c.className = 'cat-btn';
+    c.textContent = cat;
+    c.onclick = () => { filterByCategory(cat); };
+    list.appendChild(c);
+  });
+}
+
+function renderCards(){
+  const q = $('#searchInput').value.trim().toLowerCase();
+  const container = $('#cards'); container.innerHTML = '';
+  const filtered = activities.filter(a => {
+    if(!q) return true;
+    return (a.title + ' ' + a.desc + ' ' + a.category).toLowerCase().includes(q);
+  });
+
+  if(filtered.length === 0){
+    container.innerHTML = '<div style="padding:18px;color:var(--muted)">No activities found.</div>';
+    return;
+  }
+
+  filtered.forEach(a=>{
+    const el = document.createElement('div');
+    el.className = 'card';
+    el.innerHTML = `
+      <img src="${a.img}" alt="${escapeHtml(a.title)}">
+      <div class="card-body">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-weight:600">${escapeHtml(a.title)}</div>
+          <div class="price">IDR ${a.price.toLocaleString()}</div>
+        </div>
+        <div class="muted" style="margin-top:8px">${escapeHtml(a.category)}</div>
+        <div style="margin-top:12px;display:flex;gap:8px">
+          <button class="btn btn-ghost" onclick="openDetails(${a.id})">Details</button>
+          <button class="btn btn-cta" onclick="openBookingPopup(${a.id})">Book</button>
+        </div>
+      </div>
+    `;
+    container.appendChild(el);
+  });
+}
+
+/* ===================== UTIL ===================== */
+function escapeHtml(str){ return String(str).replace(/[&<>\"']/g, s=>({ '&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"\'":'&#39;' }[s])); }
+
+/* ===================== MODAL / DETAILS ===================== */
+function openDetails(id){
+  const a = activities.find(x => x.id === id);
+  $('#modalBody').innerHTML = `
+    <div style="display:grid;gap:12px">
+      <div class="gallery"><img src="${a.img}" alt="${escapeHtml(a.title)}"></div>
+      <div>
+        <h3 style="margin:6px 0">${escapeHtml(a.title)}</h3>
+        <div class="muted">${escapeHtml(a.category)} • IDR ${a.price.toLocaleString()}</div>
+        <p style="margin-top:8px">${escapeHtml(a.desc)}</p>
+        <div style="margin-top:12px;display:flex;gap:8px">
+          <button class="btn btn-cta" onclick="openBookingPopup(${a.id})">Book This Activity</button>
+          <button class="btn btn-ghost" onclick="closeModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  `;
+  $('#modal').classList.add('open');
+}
+function closeModal(){ $('#modal').classList.remove('open'); }
+
+/* ===================== BOOKING POPUP (selector) ===================== */
+let selectedActivity = null;
+function openBookingPopup(id){
+  selectedActivity = activities.find(x => x.id === id);
+  $('#bookPopup').classList.add('open');
+}
+function closeBookingPopup(){
+  $('#bookPopup').classList.remove('open');
+}
+
+/* Shortcut: book via WhatsApp directly */
+function bookViaWhatsApp(){
+  if(!selectedActivity) return;
+  const a = selectedActivity;
+  const text = `Booking request for *${a.title}*%0APrice: IDR ${a.price.toLocaleString()}%0AName:%0APhone:%0ADates:`;
+  window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${text}`, '_blank');
+  closeBookingPopup();
+}
+
+/* ===================== FORM POPUP (integrated) ===================== */
+// Helper to populate a single activity select element
+function populateActivitySelectElement(selectElement, preselectedValue = '') {
+  selectElement.innerHTML = '<option value="">-- Select Activity --</option>';
+  activities.forEach(a => {
+    const opt = document.createElement('option');
+    opt.value = a.title;
+    opt.textContent = `${a.title} — IDR ${a.price.toLocaleString()}`;
+    selectElement.appendChild(opt);
+  });
+  if (preselectedValue) {
+    selectElement.value = preselectedValue;
+  }
+}
+
+function openFormPopup(){
+  // Clear existing date blocks and add one fresh one
+  const dateListContainer = $('#dateList');
+  dateListContainer.innerHTML = ''; // Clear all
+  addDate(); // Add one default block
+
+  // Pre-select activity if one was chosen from a card
+  if (selectedActivity) {
+    const firstActivitySelect = dateListContainer.querySelector('select[name="activities[]"]');
+    if (firstActivitySelect) {
+      populateActivitySelectElement(firstActivitySelect, selectedActivity.title);
+    }
+  }
+
+  // Reset other form fields
+  $('#bookingForm').reset();
+  // Ensure the access key is retained
+  $('#bookingForm input[name="access_key"]').value = "{YOUR_WEB3FORMS_KEY}";
+  $('#formResult').textContent = ''; // Clear previous result message
+
+  $('#formPopup').classList.add('open');
+  closeBookingPopup();
+}
+
+function closeForm(){
+  $('#formPopup').classList.remove('open');
+}
+
+/* ===================== DYNAMIC DATES & ACTIVITIES ===================== */
+function addDate() {
+  const container = $('#dateList');
+  const div = document.createElement('div');
+  div.classList.add('date-block');
+
+  div.innerHTML = `
+    <div class="date-item">
+      <input type="date" name="dates[]" required>
+      <button type="button" class="remove-btn" onclick="removeDate(this)">✕</button>
+    </div>
+    <div class="activity-item">
+      <label>Choose Activity</label>
+      <select name="activities[]" required>
+        <option value="">-- Select Activity --</option>
+      </select>
+    </div>
+  `;
+
+  container.appendChild(div);
+  // Populate the new select element
+  populateActivitySelectElement(div.querySelector('select[name="activities[]"]'));
+}
+
+function removeDate(button) {
+  const block = button.closest('.date-block');
+  const list = $('#dateList');
+  if (list.children.length > 1) {
+    block.remove();
+  } else {
+    alert("At least one date and activity block is required.");
+  }
+}
+
+/* ===================== SUBMIT FORM (Web3Forms) ===================== */
+const bookingForm = $('#bookingForm');
+bookingForm.addEventListener('submit', function(e){
+  e.preventDefault();
+  $('#formResult').textContent = 'Sending...';
+
+  const fd = new FormData(bookingForm);
+
+  // Collect all dates and activities
+  const dateBlocks = $all('#dateList .date-block');
+  const bookingDetails = [];
+  dateBlocks.forEach((block, index) => {
+    const dateInput = block.querySelector('input[name="dates[]"]');
+    const activitySelect = block.querySelector('select[name="activities[]"]');
+    if (dateInput && activitySelect && dateInput.value && activitySelect.value) {
+      bookingDetails.push(`Date ${index + 1}: ${dateInput.value}, Activity: ${activitySelect.value}`);
+    }
+  });
+
+  fd.set('BookingDetails', bookingDetails.join(' | ')); // Combine into a single field for Web3Forms
+
+  // Remove individual date and activity fields as they are combined into 'BookingDetails'
+  fd.delete('dates[]');
+  fd.delete('activities[]');
+
+  fetch(bookingForm.action, {
+    method: 'POST',
+    body: fd
+  })
+  .then(r => r.json())
+  .then(data => {
+    if(data.success || data.message === 'success'){
+      $('#formResult').textContent = 'Booking submitted — we will contact you soon!';
+      bookingForm.reset();
+      // Reset date list to a single empty date-activity input
+      const dl = $('#dateList');
+      dl.innerHTML = '';
+      addDate(); // Add one default block
+      setTimeout(closeForm, 1200);
+    } else {
+      $('#formResult').textContent = 'Submission failed — please try again.';
+      console.error('web3forms response:', data);
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    $('#formResult').textContent = 'Network error — please try again later.';
+  });
+});
+
+/* quick "Send to WhatsApp" from form values for users who prefer WA */
+function submitBookingToWhatsapp(){
+  // read form values
+  const name = $('#customerName').value.trim();
+  const email = $('#customerEmail').value.trim();
+  const phone = $('#customerPhone').value.trim();
+  const message = $('#notes').value.trim();
+
+  const dateBlocks = $all('#dateList .date-block');
+  const bookingDetails = [];
+  dateBlocks.forEach((block, index) => {
+    const dateInput = block.querySelector('input[name="dates[]"]');
+    const activitySelect = block.querySelector('select[name="activities[]"]');
+    if (dateInput && activitySelect && dateInput.value && activitySelect.value) {
+      bookingDetails.push(`Date ${index + 1}: ${dateInput.value}, Activity: ${activitySelect.value}`);
+    }
+  });
+  const bookingDetailsText = bookingDetails.length ? bookingDetails.join('%0A') : '(No dates/activities specified)';
+
+  const text = [
+    `Booking Request from Form:`,
+    `Name: ${name || 'N/A'}`,
+    `Email: ${email || 'N/A'}`,
+    `Phone: ${phone || 'N/A'}`,
+    `--- Booking Details ---`,
+    bookingDetailsText,
+    `--- Message ---`,
+    `${message || 'N/A'}`
+  ].join('%0A');
+
+  window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${text}`, '_blank');
+}
+
+/* ===================== QUICK BOOK (existing) ===================== */
+// The original quick book form was removed from HTML. This function is now unused.
+// function submitQuickBook(){
+//   const name = $('#qbName').value.trim();
+//   const phone = $('#qbPhone').value.trim();
+//   const date = $('#qbDate').value;
+//   const text = `Quick Booking%0AName: ${encodeURIComponent(name)}%0APhone: ${encodeURIComponent(phone)}%0ADate: ${encodeURIComponent(date)}`;
+//   window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${text}`, '_blank');
+// }
+
+/* ===================== UTILS / NAV ===================== */
+function filterByCategory(cat){
+  $('#searchInput').value = cat === 'All' ? '' : cat;
+  renderCards();
+  scrollToSection('popular');
+}
+
+function scrollToSection(id){
+  document.getElementById(id).scrollIntoView({behavior:'smooth'});
+}
+
+function openWhatsApp(){
+  const msg = encodeURIComponent('Hello! I want to ask about Bali activities.');
+  window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${msg}`, '_blank');
+}
+
+/* convenience: close popups when pressing ESC */
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape'){
+    closeModal();
+    closeBookingPopup();
+    closeForm();
+  }
+});
+</script>
+
+</body>
+</html>
